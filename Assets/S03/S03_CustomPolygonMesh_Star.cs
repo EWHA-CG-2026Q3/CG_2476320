@@ -22,16 +22,16 @@ public class S03_CustomPolygonMesh_Star : MonoBehaviour
 
         int[] triangles = new int[]
         {
-            0, 7, 1,
-            0, 2, 7,
-            0, 8, 2,
-            0, 3, 8,
-            0, 9, 3,
-            0, 4, 9,
-            0, 10, 4,
-            0, 5, 10,
-            0, 6, 5,
-            0, 1, 6,
+            0, 1, 7,
+            0, 7, 2,
+            0, 2, 8,
+            0, 8, 3,
+            0, 3, 9,
+            0, 9, 4,
+            0, 4, 10,
+            0, 10, 5,
+            0, 5, 6,
+            0, 6, 1,
         };
 
         Mesh mesh = new Mesh();
