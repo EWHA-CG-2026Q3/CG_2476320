@@ -7,7 +7,6 @@ public class S03_CustomPolygonMesh_Star : MonoBehaviour
     {
         Vector3[] vertices = new Vector3[]
         {
-            new Vector3( 0.000f,  0.000f, 0f),
             new Vector3( 0.000f,  1.000f, 0f),
             new Vector3(-0.951f,  0.309f, 0f),
             new Vector3(-0.588f, -0.809f, 0f),
@@ -22,16 +21,14 @@ public class S03_CustomPolygonMesh_Star : MonoBehaviour
 
         int[] triangles = new int[]
         {
-            0, 1, 7,
-            0, 7, 2,
-            0, 2, 8,
-            0, 8, 3,
-            0, 3, 9,
-            0, 9, 4,
-            0, 4, 10,
-            0, 10, 5,
-            0, 5, 6,
-            0, 6, 1,
+            5, 7, 6,
+            5, 8, 7,
+            5, 9, 8,
+            5, 6, 0,
+            6, 7, 1,
+            7, 8, 2,
+            8, 9, 3,
+            9, 5, 4,
         };
 
         Mesh mesh = new Mesh();
