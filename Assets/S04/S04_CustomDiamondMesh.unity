@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 1666173450}
   - component: {fileID: 1666173449}
   - component: {fileID: 1666173452}
+  - component: {fileID: 1666173453}
   m_Layer: 0
   m_Name: CustomDiamondMesh
   m_TagString: Untagged
@@ -359,6 +360,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad2e4afe2d6ef74d99075adbb7e8bb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::S04_CustomDiamondMesh
+--- !u!114 &1666173453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666173447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9e117d192c2f747b2397022005ef40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NormalVisualizer
 --- !u!1 &1875535261
 GameObject:
   m_ObjectHideFlags: 0
