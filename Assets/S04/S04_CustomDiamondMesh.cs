@@ -33,5 +33,6 @@ public class S04_CustomDiamondMesh : MonoBehaviour
 
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        GetComponent<MeshRenderer>().sharedMaterial.color = Color.cyan;
     }
 }
