@@ -148,11 +148,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bb849f7a21c53442b2df1cda7d592e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::S06_OpenGL_Finish
-  lineMaterial: {fileID: 2100000, guid: de432ec3a77e58644ac160ea5b31fac4, type: 2}
-  vertexA: {x: 0, y: 0, z: 0}
-  vertexB: {x: 1, y: 0, z: 0}
-  vertexC: {x: 0.5, y: 1, z: 0}
-  triangleColor: {r: 1, g: 0.6, b: 0.2, a: 1}
+  glMaterial: {fileID: 2100000, guid: de432ec3a77e58644ac160ea5b31fac4, type: 2}
+  vertexA: {x: -1, y: 0, z: -1}
+  vertexB: {x: 1, y: 3, z: 1}
+  vertexC: {x: 3, y: -0.6, z: 0}
+  triangleColor: {r: 0.827451, g: 1, b: 0.1882353, a: 1}
 --- !u!4 &18265551
 Transform:
   m_ObjectHideFlags: 0
