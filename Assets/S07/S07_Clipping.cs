@@ -9,8 +9,9 @@ public class S07_Clipping : MonoBehaviour
     [SerializeField] private int canvasHeight = 256;
     [SerializeField] private int clipMargin = 40;  // 캔버스 안쪽으로 이만큼 들어온 지점이 클리핑 경계
     [SerializeField]
+    // 설계 이유: 한 꼭짓점이 두 경계를 동시에 벗어나는 코너 케이스에서도 Sutherland-Hodgman 연속 클리핑이 올바르게 동작하는지 확인하려 했다.
     private List<Vector2> polygon = new List<Vector2> {
-        new Vector2(10, 130), new Vector2(130, 250), new Vector2(246, 130)
+        new Vector2(5, 240), new Vector2(248, 128), new Vector2(128, 5)
     };
     [SerializeField] private Color fillColor = new Color(1f, 0.6f, 0.2f, 1f);
     [SerializeField] private Color marginOutlineColor = new Color(0.5f, 0.5f, 0.5f, 1f);
