@@ -53,10 +53,10 @@ public class S09_RotationX : MonoBehaviour
         //       완성하면 아래의 임시 반환(단위행렬)을 지울 것
 
         return new float[,] {   // 임시: 아무 변환도 하지 않는 단위행렬
-            { 1f, 0f, 0f, 0f },
-            { 0f, 1f, 0f, 0f },
-            { 0f, 0f, 1f, 0f },
-            { 0f, 0f, 0f, 1f }
+            { 1f, 0f,  0f, 0f },
+            { 0f,  c,  -s, 0f },
+            { 0f,  s,   c, 0f },
+            { 0f, 0f,  0f, 1f }
         };
     }
 
