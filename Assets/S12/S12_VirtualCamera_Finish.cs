@@ -60,6 +60,9 @@ public class S12_VirtualCamera_Finish : MonoBehaviour
     Matrix4x4 BuildProjectionMatrix()
     {
         float aspect = (float)width / height;                      // 캔버스의 가로세로 비 (400 ÷ 300)
+        // [aspect=1 실험 결과] aspect=1로 고정하면 x축도 y축과 같은 배율(f)로 스케일되어
+        // NDC x값이 올바른 경우보다 약 1.33배 커지므로 캔버스의 공이 가로로 늘어나 보인다.
+        // 이는 직사각형(4:3) 캔버스를 정사각형으로 잘못 가정했을 때 생기는 비율 왜곡이다.
         float f = 1f / Mathf.Tan(fieldOfView * 0.5f * Mathf.Deg2Rad);  // f = 1/tan(fov/2)
 
         Matrix4x4 m = Matrix4x4.zero;                              // 16칸 모두 0에서 시작
