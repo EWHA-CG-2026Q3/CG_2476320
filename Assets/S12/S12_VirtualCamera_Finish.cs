@@ -4,7 +4,8 @@ using UnityEngine.UI;
 // S12: 빈 오브젝트 VirtualCamera가 본 장면을 원근투영으로 캔버스에 그림
 // S11_VirtualCamera_Finish.cs에서 바뀐 곳
 //   - size 대신 fieldOfView (세로 각도)
-//   - BuildProjectionMatrix 추가
+//   - BuildProjectionMatrix: z 범위 매핑(P[2,2], P[2,3]) 추가
+//   - BuildViewMatrix: MultiplyMatrixMatrix 사용 (S11과 통일)
 //   - ToPixel: size로 나누던 두 줄을 "P 곱하기와 w로 나누기"로 바꿈
 //   - DrawLine: 캔버스 밖 픽셀은 칠하지 않고 건너뜀
 //   - OnDrawGizmos: 직육면체 상자 대신 Frustum
@@ -51,20 +52,34 @@ public class S12_VirtualCamera_Finish : MonoBehaviour
     {
         Matrix4x4 Tinv = Matrix4x4.Translate(-cam.position);                    // T⁻¹
         Matrix4x4 Rinv = Matrix4x4.Rotate(Quaternion.Inverse(cam.rotation));    // R⁻¹
-        return Rinv * Tinv;
+        return MultiplyMatrixMatrix(Rinv, Tinv);
     }
 
-    // 원근 투영 행렬 P: 1행 1/(tan(fov/2) * aspect), 2행 1/tan(fov/2), 4행 [0 0 1 0]
+    // 원근 투영 행렬 P: 1행 f/aspect, 2행 f, 3행 z 범위 매핑, 4행 [0 0 1 0]
+    // f = 1/tan(fov/2), w = z (투시 나누기용)
     Matrix4x4 BuildProjectionMatrix()
     {
         float aspect = (float)width / height;                      // 캔버스의 가로세로 비 (400 ÷ 300)
-        float t = Mathf.Tan(fieldOfView * 0.5f * Mathf.Deg2Rad);   // tan(fov / 2)
+        float f = 1f / Mathf.Tan(fieldOfView * 0.5f * Mathf.Deg2Rad);  // f = 1/tan(fov/2)
 
         Matrix4x4 m = Matrix4x4.zero;                              // 16칸 모두 0에서 시작
-        m.m00 = 1f / (t * aspect);                                 // 1행 1열
-        m.m11 = 1f / t;                                            // 2행 2열
+        m.m00 = f / aspect;                                        // 1행 1열: x 스케일
+        m.m11 = f;                                                 // 2행 2열: y 스케일
+        m.m22 = (far + near) / (far - near);                       // 3행 3열: NDC z 매핑
+        m.m23 = -2f * far * near / (far - near);                   // 3행 4열: NDC z 오프셋
         m.m32 = 1f;                                                // 4행 3열: 4행이 [0 0 1 0], w = z
-        return m;                                                  // 3행(깊이 자리)은 0 그대로
+        return m;
+    }
+
+    Matrix4x4 MultiplyMatrixMatrix(Matrix4x4 A, Matrix4x4 B)
+    {
+        Matrix4x4 C = Matrix4x4.zero;
+        for (int col = 0; col < 4; col++)
+        {
+            Vector4 bCol = B.GetColumn(col);
+            C.SetColumn(col, A * bCol);
+        }
+        return C;
     }
 
     // 카메라(VirtualCamera)가 본 장면을 캔버스에 와이어프레임으로 그림 (매 프레임)
