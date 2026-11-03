@@ -10,6 +10,13 @@ Shader "CG/Mid_SnowCover"
         _SnowAmount     ("Snow Amount", Range(0,1)) = 1.0                // 전체 세기 (0→1 영상 소재)
         _Smoothness     ("Smoothness", Range(0,1)) = 0.5
         _SnowSmoothness ("Snow Smoothness", Range(0,1)) = 0.7           // 눈은 약간 반짝
+
+        // ── 지붕 영역 마스크 (M6) ─────────────────────────────────────
+        _CoverMin       ("Cover Min (XZ)", Vector) = (0,0,0,0)          // 지붕 바닥 xz 최솟값
+        _CoverMax       ("Cover Max (XZ)", Vector) = (0,0,0,0)          // 지붕 바닥 xz 최댓값
+        _CoverSoftness  ("Cover Softness (m)", Float) = 0.3             // 경계 부드러움
+        _CoverInset     ("Cover Inset (m)", Float) = 0.2                // 처마 아래 눈 들이침 여유
+        _UseCoverMask   ("Use Cover Mask", Float) = 0                   // 0=끔(기존 머티리얼), 1=켬
     }
     SubShader
     {
@@ -37,6 +44,8 @@ Shader "CG/Mid_SnowCover"
             float4 _BaseColor, _SnowColor;
             float  _SnowLevel, _SnowBlend, _SnowAmount;
             float  _Smoothness, _SnowSmoothness;
+            float4 _CoverMin, _CoverMax;
+            float  _CoverSoftness, _CoverInset, _UseCoverMask;
 
             struct v2f
             {
@@ -65,6 +74,15 @@ Shader "CG/Mid_SnowCover"
                 float3 N        = normalize(i.normalWS);
                 float  ndotUp   = dot(N, float3(0,1,0));
                 float  snowMask = smoothstep(_SnowLevel, _SnowLevel + _SnowBlend, ndotUp) * _SnowAmount;
+
+                // 지붕 영역 마스크: 월드 xz가 지붕 사각형 안이면 눈 제거 (좌표계 수업 내용)
+                float2 posXZ    = i.positionWS.xz;
+                float2 rMin     = _CoverMin.xy + _CoverInset;
+                float2 rMax     = _CoverMax.xy - _CoverInset;
+                float2 insideXZ = smoothstep(rMin - _CoverSoftness, rMin, posXZ)
+                                * (1 - smoothstep(rMax, rMax + _CoverSoftness, posXZ));
+                float  inside   = insideXZ.x * insideXZ.y;
+                snowMask *= lerp(1, 1 - inside, _UseCoverMask);
 
                 float4 baseTex = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv);
                 float3 baseCol = baseTex.rgb * _BaseColor.rgb;

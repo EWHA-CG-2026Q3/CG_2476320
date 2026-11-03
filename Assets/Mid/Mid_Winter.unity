@@ -11179,7 +11179,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 171696, guid: feaee6661c9f6b74ca58f5bd83095947, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1934041115}
   m_SourcePrefab: {fileID: 100100000, guid: feaee6661c9f6b74ca58f5bd83095947, type: 3}
 --- !u!1 &1927666850
 GameObject:
@@ -11308,6 +11311,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1494902533}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1934041110 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 171696, guid: feaee6661c9f6b74ca58f5bd83095947, type: 3}
+  m_PrefabInstance: {fileID: 1919228739}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1934041113 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2339254, guid: feaee6661c9f6b74ca58f5bd83095947, type: 3}
+  m_PrefabInstance: {fileID: 1919228739}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1934041115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934041110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02fcfe911a2f6254998a80b673b683e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Mid_SnowCoverBinder
+  roofRenderer: {fileID: 1934041113}
+  targetMaterials:
+  - {fileID: 2100000, guid: 1b01f57eac6fdd0449569708aabba6bc, type: 2}
+  - {fileID: 2100000, guid: a957a7e77ad277c4d89d28624c7e23eb, type: 2}
 --- !u!1 &1934927825
 GameObject:
   m_ObjectHideFlags: 0
