@@ -15,16 +15,16 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.04, g: 0.04, b: 0.1, a: 1}
-  m_FogMode: 2
+  m_FogColor: {r: 0.06, g: 0.08, b: 0.14, a: 1}
+  m_FogMode: 3
   m_FogDensity: 0.03
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.04, g: 0.04, b: 0.1, a: 1}
-  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
-  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientSkyColor: {r: 0.06, g: 0.08, b: 0.18, a: 1}
+  m_AmbientEquatorColor: {r: 0.12, g: 0.15, b: 0.22, a: 1}
+  m_AmbientGroundColor: {r: 0.04, g: 0.04, b: 0.06, a: 1}
   m_AmbientIntensity: 0.1
-  m_AmbientMode: 3
+  m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -412,8 +412,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 1
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_Intensity: 0
+  m_Color: {r: 0.62, g: 0.72, b: 1, a: 1}
+  m_Intensity: 0.4
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -5825,9 +5825,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.1897605, b: 0, a: 1}
-  m_Intensity: 0.5
-  m_Range: 1
+  m_Color: {r: 1, g: 0.55, b: 0.2, a: 1}
+  m_Intensity: 4
+  m_Range: 8
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -5947,6 +5947,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: 2377288, guid: 0a369294bc1b20441be531b681112d46, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: edf713098e2b4604a8952e0f151e35e5, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6742,15 +6746,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7240368253585375633, guid: 9c7ae3484eee3419ebe5098960a53fbb, type: 3}
       propertyPath: m_BackGroundColor.b
-      value: 0.1
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 7240368253585375633, guid: 9c7ae3484eee3419ebe5098960a53fbb, type: 3}
       propertyPath: m_BackGroundColor.g
-      value: 0.04
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 7240368253585375633, guid: 9c7ae3484eee3419ebe5098960a53fbb, type: 3}
       propertyPath: m_BackGroundColor.r
-      value: 0.04
+      value: 0.06
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
