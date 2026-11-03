@@ -6,6 +6,8 @@ Shader "CG/Mid_SnowTexture"
         _DetailMap      ("Detail Map", 2D) = "white" {}                  // S18처럼 텍스처 받기
         _Tiling         ("Tiling", Float) = 8                            // S18처럼 반복 횟수
         _DetailStrength ("Detail Strength", Range(0,1)) = 0.3
+        _ShadowColor    ("Shadow Color", Color) = (0.21, 0.42, 0.66, 1) // #386CA9 — 원칙 2: 그림자는 남색
+        _ShadowStrength ("Shadow Strength", Range(0,1)) = 1.0
     }
     SubShader
     {
@@ -13,40 +15,84 @@ Shader "CG/Mid_SnowTexture"
 
         Pass
         {
+            Name "ForwardLit"
+            Tags { "LightMode"="UniversalForward" }
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_fog                                    // 규칙 8: 안개 지원
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fog                                     // 규칙 8: 안개 지원
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             float4    _BaseColor;
             sampler2D _DetailMap;
             float     _Tiling;
             float     _DetailStrength;
+            float4    _ShadowColor;
+            float     _ShadowStrength;
 
             struct v2f
             {
                 float4 positionCS : SV_POSITION;
                 float2 uv         : TEXCOORD0;
-                float  fogFactor  : TEXCOORD1;                          // 규칙 8: 안개 계수
+                float  fogFactor  : TEXCOORD1;                           // 규칙 8: 안개 계수
+                float3 positionWS : TEXCOORD2;                           // 그림자 좌표 계산용
             };
 
             v2f vert(float3 positionOS : POSITION, float2 uv : TEXCOORD0)
             {
                 v2f o;
-                o.positionCS = TransformObjectToHClip(positionOS);
-                o.uv         = uv;
-                o.fogFactor  = ComputeFogFactor(o.positionCS.z);        // 규칙 8
+                float3 posWS  = TransformObjectToWorld(positionOS);
+                o.positionCS  = TransformWorldToHClip(posWS);
+                o.positionWS  = posWS;
+                o.uv          = uv;
+                o.fogFactor   = ComputeFogFactor(o.positionCS.z);        // 규칙 8
                 return o;
             }
 
             float4 frag(v2f i) : SV_Target
             {
                 // S18처럼 텍스처 읽기 + BaseColor 곱하기
-                float detail = tex2D(_DetailMap, i.uv * _Tiling).r;
-                float3 col = _BaseColor.rgb * lerp(1, detail, _DetailStrength);
-                return float4(MixFog(col, i.fogFactor), 1);             // 규칙 8
+                float  detail = tex2D(_DetailMap, i.uv * _Tiling).r;
+                float3 col    = _BaseColor.rgb * lerp(1, detail, _DetailStrength);
+
+                // 그림자 수신 (URP 메인 라이트 그림자 맵 사용 — 발표 시 명시)
+                float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
+                float  shadow      = MainLightRealtimeShadow(shadowCoord);
+                // shadow=1이면 햇빛, shadow=0이면 그늘 → 남색 _ShadowColor로 lerp
+                col = lerp(lerp(col, _ShadowColor.rgb, _ShadowStrength), col, shadow);
+
+                return float4(MixFog(col, i.fogFactor), 1);              // 규칙 8
             }
+            ENDHLSL
+        }
+
+        // 그림자를 받으려면 ShadowCaster 패스도 있어야 다른 오브젝트에 그림자를 드림
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode"="ShadowCaster" }
+            ColorMask 0
+
+            HLSLPROGRAM
+            #pragma vertex vertShadow
+            #pragma fragment fragShadow
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
+
+            float3 _LightDirection;
+
+            float4 vertShadow(float3 posOS : POSITION, float3 normalOS : NORMAL) : SV_POSITION
+            {
+                float3 posWS    = TransformObjectToWorld(posOS);
+                float3 normalWS = TransformObjectToWorldNormal(normalOS);
+                return TransformWorldToHClip(ApplyShadowBias(posWS, normalWS, _LightDirection));
+            }
+
+            half4 fragShadow() : SV_Target { return 0; }
             ENDHLSL
         }
     }
