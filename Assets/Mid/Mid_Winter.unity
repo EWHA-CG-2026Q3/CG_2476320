@@ -15,15 +15,15 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.06, g: 0.08, b: 0.14, a: 1}
+  m_FogColor: {r: 0.08235294, g: 0.27450982, b: 0.52156866, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.03
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.06, g: 0.08, b: 0.18, a: 1}
-  m_AmbientEquatorColor: {r: 0.12, g: 0.15, b: 0.22, a: 1}
-  m_AmbientGroundColor: {r: 0.04, g: 0.04, b: 0.06, a: 1}
-  m_AmbientIntensity: 0.1
+  m_AmbientSkyColor: {r: 0.21960784, g: 0.42352942, b: 0.6627451, a: 1}
+  m_AmbientEquatorColor: {r: 0.08235294, g: 0.27450982, b: 0.52156866, a: 1}
+  m_AmbientGroundColor: {r: 0.078431375, g: 0.12156863, b: 0.2627451, a: 1}
+  m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -412,8 +412,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 1
-  m_Color: {r: 0.62, g: 0.72, b: 1, a: 1}
-  m_Intensity: 0.4
+  m_Color: {r: 0.21960784, g: 0.42352942, b: 0.6627451, a: 1}
+  m_Intensity: 0.6
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -475,7 +475,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629838926}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.9848078, y: -0, z: -0, w: -0.17364809}
+  m_LocalRotation: {x: 0.25000003, y: -0.25000003, z: 0.066987306, w: 0.9330127}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5568,7 +5568,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1317961964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5608,7 +5608,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 1, g: 0.3584142, b: 0.06692903, a: 1}
+  m_Color: {r: 0.99607843, g: 0.8627451, b: 0.7490196, a: 1}
   m_Intensity: 15
   m_Range: 5
   m_SpotAngle: 35
@@ -5825,8 +5825,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.55, b: 0.2, a: 1}
-  m_Intensity: 4
+  m_Color: {r: 0.99607843, g: 0.8627451, b: 0.7490196, a: 1}
+  m_Intensity: 5
   m_Range: 8
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -5973,7 +5973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1491764679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6013,7 +6013,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 0.3584142, b: 0.06692903, a: 1}
+  m_Color: {r: 0.99607843, g: 0.8627451, b: 0.7490196, a: 1}
   m_Intensity: 3
   m_Range: 4
   m_SpotAngle: 30
@@ -11164,10 +11164,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: d5b1592fe6bee014fa06890a54ecfd2d, type: 2}
+    - target: {fileID: 2339254, guid: feaee6661c9f6b74ca58f5bd83095947, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ce43d47c8b39da44cbc70b294f215c87, type: 2}
     - target: {fileID: 2344444, guid: feaee6661c9f6b74ca58f5bd83095947, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 01484103463f76a4aae638f0f7001bdb, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b01f57eac6fdd0449569708aabba6bc, type: 2}
+    - target: {fileID: 2344444, guid: feaee6661c9f6b74ca58f5bd83095947, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a957a7e77ad277c4d89d28624c7e23eb, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11190,7 +11198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1927666851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11230,7 +11238,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.99607843, g: 0.8627451, b: 0.7490196, a: 1}
   m_Intensity: 1
   m_Range: 5
   m_SpotAngle: 30
@@ -11317,7 +11325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1934927826
 Transform:
   m_ObjectHideFlags: 0
@@ -11372,7 +11380,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 0.6762638, g: 0.7317241, b: 0.8584906, a: 1}
+  m_Color: {r: 0.99607843, g: 0.8627451, b: 0.7490196, a: 1}
   m_Intensity: 1
   m_Range: 5
   m_SpotAngle: 109.91072
@@ -11610,15 +11618,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7240368253585375633, guid: 9c7ae3484eee3419ebe5098960a53fbb, type: 3}
       propertyPath: m_BackGroundColor.b
-      value: 0.14
+      value: 0.52156866
       objectReference: {fileID: 0}
     - target: {fileID: 7240368253585375633, guid: 9c7ae3484eee3419ebe5098960a53fbb, type: 3}
       propertyPath: m_BackGroundColor.g
-      value: 0.08
+      value: 0.27450982
       objectReference: {fileID: 0}
     - target: {fileID: 7240368253585375633, guid: 9c7ae3484eee3419ebe5098960a53fbb, type: 3}
       propertyPath: m_BackGroundColor.r
-      value: 0.06
+      value: 0.08235294
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
