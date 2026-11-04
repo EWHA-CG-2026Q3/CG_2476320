@@ -12,11 +12,20 @@ Shader "CG/Mid_SnowCover"
         _SnowSmoothness ("Snow Smoothness", Range(0,1)) = 0.7           // 눈은 약간 반짝
 
         // ── 지붕 영역 마스크 (M6) ─────────────────────────────────────
-        _CoverMin       ("Cover Min (XZ)", Vector) = (0,0,0,0)          // 지붕 바닥 xz 최솟값
-        _CoverMax       ("Cover Max (XZ)", Vector) = (0,0,0,0)          // 지붕 바닥 xz 최댓값
-        _CoverSoftness  ("Cover Softness (m)", Float) = 0.3             // 경계 부드러움
-        _CoverInset     ("Cover Inset (m)", Float) = 0.2                // 처마 아래 눈 들이침 여유
-        _UseCoverMask   ("Use Cover Mask", Float) = 0                   // 0=끔(기존 머티리얼), 1=켬
+        _CoverMin       ("Cover Min (XZ)", Vector) = (0,0,0,0)
+        _CoverMax       ("Cover Max (XZ)", Vector) = (0,0,0,0)
+        _CoverSoftness  ("Cover Softness (m)", Float) = 0.3
+        _CoverInset     ("Cover Inset (m)", Float) = 0.2
+        _UseCoverMask   ("Use Cover Mask", Float) = 0
+
+        // ── 가짜 실내광 (C2) ─────────────────────────────────────────
+        _InteriorGlowColor   ("실내광 밝은 색",  Color) = (0.627, 0.353, 0.208, 1) // #A05A35 WarmMid
+        _InteriorShadeColor  ("실내광 그늘 색",  Color) = (0.431, 0.184, 0.180, 1) // #6E2F2E WarmShade
+        _InteriorGlowStrength("실내광 세기", Range(0,2)) = 1.0
+        _InteriorCenter      ("실내 중심 (World)", Vector) = (0,2,1.68,0)
+        _InteriorFloorY      ("실내 바닥 Y", Float) = 0.3
+        _InteriorCeilY       ("실내 천장 Y", Float) = 4.09
+        _UseInteriorGlow     ("실내광 사용", Float) = 0                // 0=끔, 1=켬
     }
     SubShader
     {
@@ -35,6 +44,7 @@ Shader "CG/Mid_SnowCover"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _CLUSTER_LIGHT_LOOP                   // Forward+ 타일 클러스터 조명
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS    // C4: 창살 무늬 그림자
             #pragma multi_compile_fog                                     // 규칙 8
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -47,6 +57,8 @@ Shader "CG/Mid_SnowCover"
             float  _Smoothness, _SnowSmoothness;
             float4 _CoverMin, _CoverMax;
             float  _CoverSoftness, _CoverInset, _UseCoverMask;
+            float4 _InteriorGlowColor, _InteriorShadeColor, _InteriorCenter;
+            float  _InteriorGlowStrength, _InteriorFloorY, _InteriorCeilY, _UseInteriorGlow;
 
             struct v2f
             {
@@ -101,8 +113,10 @@ Shader "CG/Mid_SnowCover"
                 float3 addLight = 0;
                 uint   addCount = GetAdditionalLightsCount();
                 LIGHT_LOOP_BEGIN(addCount)
-                    Light l = GetAdditionalLight(lightIndex, i.positionWS);
-                    addLight += l.color * saturate(dot(N, l.direction)) * l.distanceAttenuation;
+                    // C4: shadowMask 오버로드 사용 → shadowAttenuation으로 창살 무늬 그림자
+                    Light l = GetAdditionalLight(lightIndex, i.positionWS, half4(1,1,1,1));
+                    addLight += l.color * saturate(dot(N, l.direction))
+                              * l.distanceAttenuation * l.shadowAttenuation;
                 LIGHT_LOOP_END
                 float3 lighting = ambient + mainLight.color * ndl + addLight;
 
@@ -110,6 +124,21 @@ Shader "CG/Mid_SnowCover"
                 float3 litBase = baseCol * lighting;
                 float3 litSnow = _SnowColor.rgb * max(lighting, float3(0.25, 0.28, 0.35));
                 float3 lit     = lerp(litBase, litSnow, snowMask);
+
+                // C2: 가짜 실내광 — 안쪽을 향한 면만 따뜻하게
+                // 바깥 면(창살·기둥 외면)은 파란 실루엣 그대로 → "창 너머로 빛" 느낌
+                // 수업 근거: 벡터 내적(facing), 월드 좌표 비교(inside, h), uniform
+                if (_UseInteriorGlow > 0.5)
+                {
+                    float3 toCenter  = normalize(_InteriorCenter.xyz - i.positionWS);
+                    float  intFacing = saturate(dot(N, toCenter));        // 안쪽 면만 양수
+                    float  h         = saturate((i.positionWS.y - _InteriorFloorY)
+                                     / (_InteriorCeilY - _InteriorFloorY));
+                    // 천장 쪽(초롱 가까이)이 더 밝음
+                    float3 warm = lerp(_InteriorShadeColor.rgb, _InteriorGlowColor.rgb,
+                                       lerp(0.4, 1.0, h) * intFacing);
+                    lit += baseTex.rgb * warm * inside * _InteriorGlowStrength;
+                }
 
                 return float4(MixFog(lit, i.fogFactor), 1);              // 규칙 8
             }

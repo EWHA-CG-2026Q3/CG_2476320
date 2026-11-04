@@ -26,6 +26,7 @@ Shader "CG/Mid_SnowTexture"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _CLUSTER_LIGHT_LOOP                   // Forward+ 타일 클러스터 조명
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS    // C4: 창살 무늬 그림자
             #pragma multi_compile_fog                                     // 규칙 8: 안개 지원
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -76,9 +77,10 @@ Shader "CG/Mid_SnowTexture"
                 float3 ptLight = 0;
                 uint   addCount = GetAdditionalLightsCount();
                 LIGHT_LOOP_BEGIN(addCount)
-                    Light l = GetAdditionalLight(lightIndex, i.positionWS);
-                    // 바닥은 위를 향하므로 (0,1,0)과의 내적 사용
-                    ptLight += l.color * l.distanceAttenuation * saturate(dot(float3(0,1,0), l.direction));
+                    // C4: shadowMask 오버로드 → shadowAttenuation으로 창살 무늬 그림자
+                    Light l = GetAdditionalLight(lightIndex, i.positionWS, half4(1,1,1,1));
+                    ptLight += l.color * l.distanceAttenuation * l.shadowAttenuation
+                             * saturate(dot(float3(0,1,0), l.direction));
                 LIGHT_LOOP_END
                 col += _BaseColor.rgb * ptLight * _PointLightGain;
 

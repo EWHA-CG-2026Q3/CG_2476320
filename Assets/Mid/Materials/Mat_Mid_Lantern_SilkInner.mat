@@ -34,7 +34,7 @@ Material:
     - _BandTop: 0.88
     - _EdgeDim: 0.4
     - _GlowFalloff: 1.5
-    - _GlowIntensity: 1.4
+    - _GlowIntensity: 0.9
     - _InnerBoost: 1.5
     - _SilkStrength: 0.3
     - _SilkTiling: 1
@@ -42,8 +42,8 @@ Material:
     m_Colors:
     - _BandColor: {r: 0.08235294, g: 0.27450982, b: 0.52156866, a: 1}
     - _EmissionColor: {r: 2.490196, g: 2.1568627, b: 1.872549, a: 1}
-    - _GlowCoreColor: {r: 1.3945098, g: 1.2078432, b: 1.0486275, a: 1}
-    - _GlowEdgeColor: {r: 1.4, g: 0.6698039, b: 0.25254902, a: 1}
+    - _GlowCoreColor: {r: 1, g: 0.69803923, b: 0.34117648, a: 1}
+    - _GlowEdgeColor: {r: 0.627451, g: 0.3529412, b: 0.20784314, a: 1}
     - _SilkColor: {r: 0.72156864, g: 0.26666668, b: 0.16470589, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
