@@ -33,7 +33,8 @@ Shader "CG/Mid_SnowCover"
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP                   // Forward+ 타일 클러스터 조명
             #pragma multi_compile_fog                                     // 규칙 8
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -92,13 +93,17 @@ Shader "CG/Mid_SnowCover"
                 Light  mainLight   = GetMainLight(shadowCoord);
                 float  ndl    = saturate(dot(N, mainLight.direction)) * mainLight.shadowAttenuation;
                 float3 ambient     = SampleSH(N);
-                float3 addLight    = 0;
-                int    addCount    = GetAdditionalLightsCount();
-                for (int li = 0; li < addCount; li++)
-                {
-                    Light l = GetAdditionalLight(li, i.positionWS);
+                // Forward+: 화면을 타일로 나눠 타일별 조명 목록을 쓰므로 전용 루프 매크로 필요
+                // (일반 for문 + GetAdditionalLightsCount()는 Forward+에서 0을 반환해 작동 안 함)
+                InputData inputData; // LIGHT_LOOP_BEGIN 매크로가 내부적으로 참조
+                inputData.positionWS = i.positionWS;
+                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(i.positionCS);
+                float3 addLight = 0;
+                uint   addCount = GetAdditionalLightsCount();
+                LIGHT_LOOP_BEGIN(addCount)
+                    Light l = GetAdditionalLight(lightIndex, i.positionWS);
                     addLight += l.color * saturate(dot(N, l.direction)) * l.distanceAttenuation;
-                }
+                LIGHT_LOOP_END
                 float3 lighting = ambient + mainLight.color * ndl + addLight;
 
                 // 베이스: 조명 적용 / 눈: 야간에도 식별되도록 최소 밝기 보장

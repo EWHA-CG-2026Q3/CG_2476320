@@ -8,6 +8,7 @@ Shader "CG/Mid_SnowTexture"
         _DetailStrength ("Detail Strength", Range(0,1)) = 0.3
         _ShadowColor    ("Shadow Color", Color) = (0.21, 0.42, 0.66, 1) // #386CA9 — 원칙 2: 그림자는 남색
         _ShadowStrength ("Shadow Strength", Range(0,1)) = 1.0
+        _PointLightGain ("Point Light Gain", Range(0,3)) = 1.0           // 포인트 라이트 세기 배율
     }
     SubShader
     {
@@ -23,6 +24,8 @@ Shader "CG/Mid_SnowTexture"
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP                   // Forward+ 타일 클러스터 조명
             #pragma multi_compile_fog                                     // 규칙 8: 안개 지원
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -33,6 +36,7 @@ Shader "CG/Mid_SnowTexture"
             float     _DetailStrength;
             float4    _ShadowColor;
             float     _ShadowStrength;
+            float     _PointLightGain;
 
             struct v2f
             {
@@ -62,8 +66,21 @@ Shader "CG/Mid_SnowTexture"
                 // 그림자 수신 (URP 메인 라이트 그림자 맵 사용 — 발표 시 명시)
                 float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
                 float  shadow      = MainLightRealtimeShadow(shadowCoord);
-                // shadow=1이면 햇빛, shadow=0이면 그늘 → 남색 _ShadowColor로 lerp
                 col = lerp(lerp(col, _ShadowColor.rgb, _ShadowStrength), col, shadow);
+
+                // 포인트 라이트(초롱 불빛) → 처마 아래 눈밭에 주황빛 원
+                // Forward+: 타일 클러스터 루프 매크로 사용 (수업 근거: Forward+는 화면 타일별 조명 목록)
+                InputData inputData;
+                inputData.positionWS = i.positionWS;
+                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(i.positionCS);
+                float3 ptLight = 0;
+                uint   addCount = GetAdditionalLightsCount();
+                LIGHT_LOOP_BEGIN(addCount)
+                    Light l = GetAdditionalLight(lightIndex, i.positionWS);
+                    // 바닥은 위를 향하므로 (0,1,0)과의 내적 사용
+                    ptLight += l.color * l.distanceAttenuation * saturate(dot(float3(0,1,0), l.direction));
+                LIGHT_LOOP_END
+                col += _BaseColor.rgb * ptLight * _PointLightGain;
 
                 return float4(MixFog(col, i.fogFactor), 1);              // 규칙 8
             }
