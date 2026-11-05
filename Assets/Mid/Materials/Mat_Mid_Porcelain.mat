@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Mat_Mid_Porcelain
+  m_Shader: {fileID: 4800000, guid: 0007ff8f1be32f94e8b94c2b6e35005d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CoverInset: 0.2
+    - _CoverSoftness: 0.3
+    - _InteriorCeilY: 4.092592
+    - _InteriorFloorY: 0.299964
+    - _InteriorGlowStrength: 1
+    - _Smoothness: 0.5
+    - _SnowAmount: 0
+    - _SnowBlend: 0.15
+    - _SnowLevel: 0.6
+    - _SnowSmoothness: 0.7
+    - _UseCoverMask: 0
+    - _UseInteriorGlow: 1
+    m_Colors:
+    - _BaseColor: {r: 0.9137255, g: 0.89411765, b: 0.84705883, a: 1}
+    - _CoverMax: {r: 2.5831065, g: 4.7820816, b: 0, a: 0}
+    - _CoverMin: {r: -2.6664953, g: -1.4261758, b: 0, a: 0}
+    - _InteriorCenter: {r: -0.041694403, g: 2.1962779, b: 1.677953, a: 0}
+    - _InteriorGlowColor: {r: 0.62745106, g: 0.35294113, b: 0.20784307, a: 1}
+    - _InteriorShadeColor: {r: 0.43099996, g: 0.18399996, b: 0.17999998, a: 1}
+    - _SnowColor: {r: 0.88, g: 0.92, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
