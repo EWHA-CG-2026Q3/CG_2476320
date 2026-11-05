@@ -118,11 +118,12 @@ Material:
     - _GlossyReflections: 1
     - _InteriorCeilY: 4.092592
     - _InteriorFloorY: 0.299964
-    - _InteriorGlowStrength: 1
+    - _InteriorGlowStrength: 1.4
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _PointLightGain: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.3

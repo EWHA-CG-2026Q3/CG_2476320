@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GlowIntensity: 1.3
+    - _GlowIntensity: 1.6
     - _HanjiStrength: 0.3
     - _HanjiTiling: 2
     - _InnerSideFactor: 0.5

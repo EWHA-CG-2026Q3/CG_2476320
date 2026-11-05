@@ -29,13 +29,25 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _CoverInset: 0.2
+    - _CoverSoftness: 0.3
+    - _InteriorCeilY: 4.09
+    - _InteriorFloorY: 0.3
+    - _InteriorGlowStrength: 1.4
     - _Smoothness: 0.5
     - _SnowAmount: 1
     - _SnowBlend: 0.15
     - _SnowLevel: 0.6
     - _SnowSmoothness: 0.7
+    - _UseCoverMask: 0
+    - _UseInteriorGlow: 0
     m_Colors:
     - _BaseColor: {r: 0.011764706, g: 0.019607844, b: 0.03529412, a: 1}
+    - _CoverMax: {r: 0, g: 0, b: 0, a: 0}
+    - _CoverMin: {r: 0, g: 0, b: 0, a: 0}
+    - _InteriorCenter: {r: 0, g: 2, b: 1.68, a: 0}
+    - _InteriorGlowColor: {r: 0.627, g: 0.35299996, b: 0.20799997, a: 1}
+    - _InteriorShadeColor: {r: 0.43099996, g: 0.18399996, b: 0.17999998, a: 1}
     - _SnowColor: {r: 0.42745098, g: 0.654902, b: 0.9019608, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
