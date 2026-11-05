@@ -33,7 +33,8 @@ Material:
     - _CoverSoftness: 0.3
     - _InteriorCeilY: 4.092592
     - _InteriorFloorY: 0.299964
-    - _InteriorGlowStrength: 1
+    - _InteriorGlowStrength: 1.4
+    - _PointLightGain: 1
     - _Smoothness: 0.5
     - _SnowAmount: 1
     - _SnowBlend: 0.15

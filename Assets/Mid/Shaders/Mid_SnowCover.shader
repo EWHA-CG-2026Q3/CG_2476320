@@ -26,6 +26,7 @@ Shader "CG/Mid_SnowCover"
         _InteriorFloorY      ("실내 바닥 Y", Float) = 0.3
         _InteriorCeilY       ("실내 천장 Y", Float) = 4.09
         _UseInteriorGlow     ("실내광 사용", Float) = 0                // 0=끔, 1=켬
+        _PointLightGain      ("Warm Light Gain (눈 위)", Range(0,10)) = 1.0  // 눈 부분 따뜻한 빛 배율
     }
     SubShader
     {
@@ -59,6 +60,7 @@ Shader "CG/Mid_SnowCover"
             float  _CoverSoftness, _CoverInset, _UseCoverMask;
             float4 _InteriorGlowColor, _InteriorShadeColor, _InteriorCenter;
             float  _InteriorGlowStrength, _InteriorFloorY, _InteriorCeilY, _UseInteriorGlow;
+            float  _PointLightGain;
 
             struct v2f
             {
@@ -118,12 +120,16 @@ Shader "CG/Mid_SnowCover"
                     addLight += l.color * saturate(dot(N, l.direction))
                               * l.distanceAttenuation * l.shadowAttenuation;
                 LIGHT_LOOP_END
-                float3 lighting = ambient + mainLight.color * ndl + addLight;
+                // addLight(따뜻한 빛)를 눈 계산에서 분리 — 눈 색(파랑) × 주황 = 회색 방지
+                float3 baseLighting = ambient + mainLight.color * ndl;
 
-                // 베이스: 조명 적용 / 눈: 야간에도 식별되도록 최소 밝기 보장
-                float3 litBase = baseCol * lighting;
-                float3 litSnow = _SnowColor.rgb * max(lighting, float3(0.25, 0.28, 0.35));
+                // 베이스: 조명 + addLight 곱하기 (나무 등 재질 색에 빛 색 반영)
+                // 눈: baseLighting만 곱하고, addLight는 직접 더해서 주황빛 그대로
+                float3 litBase = baseCol * (baseLighting + addLight);
+                float3 litSnow = _SnowColor.rgb * max(baseLighting, float3(0.25, 0.28, 0.35));
                 float3 lit     = lerp(litBase, litSnow, snowMask);
+                // 눈 부분에 따뜻한 빛 직접 추가 (수업 근거: additive lighting)
+                lit += addLight * snowMask * _PointLightGain;
 
                 // C2: 가짜 실내광 — 안쪽을 향한 면만 따뜻하게
                 // 바깥 면(창살·기둥 외면)은 파란 실루엣 그대로 → "창 너머로 빛" 느낌

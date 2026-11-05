@@ -8,7 +8,8 @@ Shader "CG/Mid_SnowTexture"
         _DetailStrength ("Detail Strength", Range(0,1)) = 0.3
         _ShadowColor    ("Shadow Color", Color) = (0.21, 0.42, 0.66, 1) // #386CA9 — 원칙 2: 그림자는 남색
         _ShadowStrength ("Shadow Strength", Range(0,1)) = 1.0
-        _PointLightGain ("Point Light Gain", Range(0,3)) = 1.0           // 포인트 라이트 세기 배율
+        _PointLightGain ("Point Light Gain", Range(0,10)) = 1.0          // 포인트 라이트 세기 배율
+        _WarmLightTint  ("Warm Light Tint", Color) = (1,1,1,1)           // 눈 위 빛 색 보정 (기본 흰색=그대로)
     }
     SubShader
     {
@@ -38,6 +39,7 @@ Shader "CG/Mid_SnowTexture"
             float4    _ShadowColor;
             float     _ShadowStrength;
             float     _PointLightGain;
+            float4    _WarmLightTint;
 
             struct v2f
             {
@@ -82,7 +84,9 @@ Shader "CG/Mid_SnowTexture"
                     ptLight += l.color * l.distanceAttenuation * l.shadowAttenuation
                              * saturate(dot(float3(0,1,0), l.direction));
                 LIGHT_LOOP_END
-                col += _BaseColor.rgb * ptLight * _PointLightGain;
+                // 눈 위 따뜻한 빛은 눈 색에 곱하지 않고 그대로 더함 (파란 눈 × 주황 = 회색 방지)
+                // 수업 근거: 빛의 선형 합성 (additive lighting)
+                col += ptLight * _PointLightGain * _WarmLightTint.rgb;
 
                 return float4(MixFog(col, i.fogFactor), 1);              // 규칙 8
             }
