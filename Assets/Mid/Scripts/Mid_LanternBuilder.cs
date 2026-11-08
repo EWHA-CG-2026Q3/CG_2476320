@@ -71,10 +71,26 @@ public class Mid_LanternBuilder : MonoBehaviour
         if (sides < 3) sides = 3;
         if (rings < 1) rings = 1;
 
+        // Mid_LanternSway 상태 보존: ClearChildren이 Pivot을 지우므로 미리 저장
+        string swayJson = null;
+        var existingPivot = transform.Find("Pivot");
+        if (existingPivot != null)
+        {
+            var existingSway = existingPivot.GetComponent<Mid_LanternSway>();
+            if (existingSway != null) swayJson = UnityEngine.JsonUtility.ToJson(existingSway);
+        }
+
         ClearChildren();
 
         // ── Pivot: 흔들림 회전은 여기서만 (S10 Hierarchy 수업 내용)
         var pivot = Make("Pivot", transform);
+
+        // Mid_LanternSway 복원 (Rebuild가 Pivot을 새로 만들어도 애니메이션 설정 유지)
+        if (swayJson != null)
+        {
+            var sway = pivot.GetComponent<Mid_LanternSway>() ?? pivot.AddComponent<Mid_LanternSway>();
+            UnityEngine.JsonUtility.FromJsonOverwrite(swayJson, sway);
+        }
 
         // ── 고리 (토러스)
         var hookGO = MakeMesh("Hook", pivot.transform);
