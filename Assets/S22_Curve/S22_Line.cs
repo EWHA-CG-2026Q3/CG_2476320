@@ -55,7 +55,7 @@ public class S22_Line : MonoBehaviour
     Vector3 PointOnSegment(Vector3 a, Vector3 b, float t)
     {
         // TODO: p = (1 − t) × a + t × b 를 코드로 옮김
-        Vector3 p = Vector3.zero;
+        Vector3 p = a + t * (b - a);
         return p;
     }
 
