@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "generator": "AITextured PBR Texture Generator",
+  "input_count": 1,
+  "normal_map_convention": "Not verified",
+  "maps": {
+    "albedo": true,
+    "normal": true,
+    "roughness": true,
+    "ambient_occlusion": true,
+    "metallic": true,
+    "height": true,
+    "orm": true
+  },
+  "orm_channels": {
+    "r": "ambient_occlusion",
+    "g": "roughness",
+    "b": "metallic"
+  },
+  "parameters": {
+    "normal_strength": 3.0,
+    "roughness_contrast": 1.2,
+    "ao_strength": 1.0,
+    "metallic": 0.0
+  }
+}
