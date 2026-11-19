@@ -6,6 +6,7 @@ Shader "CG/S20_MyToon"
         _Ambient ("Ambient", Range(0, 1)) = 0.2
         _SpecularColor ("Specular Color", Color) = (1, 1, 1, 1)
         _Shininess ("Shininess", Range(1, 256)) = 32         // 새로: 하이라이트가 얼마나 한곳에 모이는지
+        _ToonSteps ("Toon Steps", Range(1, 8)) = 3           // 새로: 명암을 몇 단계로 끊을지
     }
     SubShader
     {
@@ -24,6 +25,7 @@ Shader "CG/S20_MyToon"
             float _Ambient;
             float4 _SpecularColor;
             float _Shininess;
+            float _ToonSteps;
 
             struct Attributes
             {
@@ -58,6 +60,7 @@ Shader "CG/S20_MyToon"
                 // dot(N, L): normal과 빛이 있는 쪽 사이 각도의 cos. 정면이면 1, 옆이면 0, 등지면 음수
                 // max(0, …): 빛을 등진 쪽의 음수를 0으로 막음
                 float diffuse = max(0, dot(N, L));               // 확산광의 밝기
+                diffuse = floor(diffuse * _ToonSteps) / _ToonSteps;   // 몇 단계로 끊음 (3단계면 0, 0.33, 0.67)
 
                 // dot(R, V): 튕겨 나간 빛과 카메라가 있는 쪽 사이 각도의 cos. 튕긴 빛이 눈으로 곧장 오면 1
                 // pow(…, _Shininess): Shininess번 곱해, 1에 아주 가까운 자리만 밝게 남김
@@ -69,5 +72,7 @@ Shader "CG/S20_MyToon"
             }
             ENDHLSL
         }
+        // 그림자 드리우기: Lit 셰이더의 Pass를 빌려 옴
+        UsePass "Universal Render Pipeline/Lit/SHADOWCASTER"
     }
 }
