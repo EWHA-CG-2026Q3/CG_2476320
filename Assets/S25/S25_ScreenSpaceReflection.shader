@@ -59,41 +59,49 @@
 
                 float3 reflectColor = float3(0, 0, 0);
                 bool hit = false;
+                float2 lastValidUV = float2(0.5, 0.5);
 
                 for (int i = 0; i < 64; i++)
                 {
-                    // [2] 일정한 거리만큼 옮김 (SDF가 없으므로 걸음 크기가 늘 같음)
                     p = p + _StepSize * rayDir;
-
-                    // [3] 현재 위치를 화면에 투영해, 화면의 어느 픽셀에 해당하는지 구함 (0~1 좌표)
                     float2 uv = ComputeNormalizedDeviceCoordinates(p, UNITY_MATRIX_VP);
 
-                    // 화면 밖으로 나가면 더 확인할 정보가 없음 → 멈춤 (SSR의 대표적인 한계)
+                    // 화면 밖으로 나간 경우 → 직전 유효 UV로 하늘색 샘플링
                     if (uv.x < 0 || uv.x > 1 || uv.y < 0 || uv.y > 1)
                     {
+                        reflectColor = SampleSceneColor(lastValidUV);
+                        hit = true;
                         break;
                     }
 
-                    // [4] 그 픽셀에 그려진 물체의 깊이(카메라에서의 거리)와, 현재 위치의 깊이를 비교
+                    lastValidUV = uv;
+
                     float sceneDepth = LinearEyeDepth(SampleSceneDepth(uv), _ZBufferParams);
                     float rayDepth = -TransformWorldToView(p).z;
 
-                    // 현재 위치가 그 물체보다 뒤로 들어갔으면 → 광선이 그 물체에 닿은 것
-                    // (너무 깊이 들어간 경우는 물체 뒤를 지나간 것으로 보고 제외: 0.3은 물체 두께로 가정한 값)
+                    // 하늘 픽셀: 깊이가 far clip에 근접 → 하늘색 샘플링
+                    if (sceneDepth > _ProjectionParams.z * 0.95)
+                    {
+                        reflectColor = SampleSceneColor(uv);
+                        hit = true;
+                        break;
+                    }
+
                     if (rayDepth > sceneDepth && rayDepth - sceneDepth < 0.3)
                     {
-                        reflectColor = SampleSceneColor(uv);     // 그 픽셀에 그려진 색을 반사색으로 가져옴
+                        reflectColor = SampleSceneColor(uv);
                         hit = true;
                         break;
                     }
                 }
 
-                // 닿았으면 바닥 색과 반사색을 섞고, 닿지 않았으면 바닥 색만
-                float3 color = _BaseColor.rgb;
-                if (hit)
+                // 미스 시에도 lastValidUV(하늘/수평선)로 fallback
+                if (!hit)
                 {
-                    color = lerp(_BaseColor.rgb, reflectColor, _Reflectivity);
+                    reflectColor = SampleSceneColor(lastValidUV);
                 }
+
+                float3 color = lerp(_BaseColor.rgb, reflectColor, _Reflectivity);
                 return float4(color, 1);
             }
             ENDHLSL
